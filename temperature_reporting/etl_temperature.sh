@@ -3,10 +3,12 @@
 ## Extract
 echo "Extracting..."
 # Get temperature reading and append to log
-python3 get_temp.py --lat=39.828118 --lon=-104.936449 >> temperature.log
+timestamp=$(date +%Y-%m-%d_%H:%M:%S)
+temperature=$(python3 get_temp.py --lat=39.828118 --lon=-104.936449)
+echo "$timestamp,$temperature" >> temperature.log
 
 # Buffer last N readings
-# tail -5 temperature.log > temperature.log
+tail -6 temperature.log > tmpfile && mv tmpfile temperature.log
 
 ## Transform
 echo "Transforming..."

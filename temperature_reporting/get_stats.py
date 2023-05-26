@@ -1,4 +1,5 @@
 import argparse
+import pandas as pd
 import json
 
 
@@ -6,11 +7,12 @@ def get_statistics(log, output):
     """
     Compute temperature statistics from log file.
     """
-    with open('temperature.log', 'r') as f:
-        array = [line.rstrip() for line in f]
+    df = pd.read_csv(str(log), names=['date', 'temperature(F)'])
 
-    stats = {'min': min(array),
-             'max': max(array)}
+    stats = {'current': df['temperature(F)'].iloc[-1],
+             'avg': df.loc[:, 'temperature(F)'].mean(),
+             'min': df.loc[:, 'temperature(F)'].min(),
+             'max': df.loc[:, 'temperature(F)'].max()}
 
     with open(str(output), 'w') as f:
         json.dump(stats, f)
